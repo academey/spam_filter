@@ -1,0 +1,52 @@
+@import "../../variables";
+
+.normalInputWrapper {
+  display: flex;
+  width: 589.5px;
+  height: 36px;
+  border-radius: 2px;
+  background-color: #ffffff;
+  border: solid 1px #d8dde7;
+  overflow: hidden;
+  align-items: center;
+
+  .inputBox {
+    margin-left: 12px;
+    border: 0;
+    font-size: 13px;
+    flex: 1;
+  }
+
+  .searchIconWrapper {
+    margin-right: 13.5px;
+
+    svg {
+      width: 17px;
+      height: 17px;
+    }
+  }
+}
+
+.textareaInputWrapper {
+  display: flex;
+  margin-top: 10px;
+  width: 824px !important;
+  height: 50px;
+  height: 230px;
+  border-radius: 10px;
+  background-color: #fff;
+  border: solid 1px $space_gray2;
+  overflow: hidden;
+
+  .inputBox {
+    width: 824px !important;
+    line-height: 24px;
+    margin: 21px;
+    border: 0;
+    font-size: 16px;
+  }
+}
+
+.hasError {
+  border-color: $coral_pink;
+}

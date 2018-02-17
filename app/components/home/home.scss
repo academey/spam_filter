@@ -1,0 +1,16 @@
+@import "../variables";
+
+.chartContainer {
+  padding-top: $navbar-height;
+  max-width: $container_width;
+  margin: 0 auto;
+
+  .title {
+    margin-top: 20px;
+    font-weight: 500;
+    font-size: 30px;
+  }
+  .description {
+    margin-top: 5px;
+  }
+}

@@ -1,0 +1,69 @@
+service: ${file(./config.yml):service_name} # NOTE: update this with your service name
+
+provider:
+  name: aws
+  runtime: nodejs6.10
+  stage: stage # NOTE: Override this option at package.json with CLI-command
+  region: us-east-1
+
+# you can add packaging information here
+package:
+  artifact: dist.zip
+
+functions:
+  render:
+    handler: handlers.render
+    events:
+      - http:
+          method: get
+          path: ${self:service}
+      - http:
+          method: any
+          path: "${self:service}/{proxy+}"
+  getAccessToken:
+    handler: handlers.getAccessToken
+    events:
+      - http:
+          method: post
+          path: "getAccessToken"
+          cors: true
+
+resources:
+  Resources:
+    RenderLogGroup:
+      Properties:
+        RetentionInDays: "30"
+
+    CloudFrontDistribution:
+      Type: AWS::CloudFront::Distribution
+      Properties:
+        DistributionConfig:
+          DefaultRootObject: ''
+          Enabled: true
+          DefaultCacheBehavior:
+            DefaultTTL: 300
+            MaxTTL: 300
+            MinTTL: 300
+            AllowedMethods:
+              - GET
+              - HEAD
+            CachedMethods:
+              - HEAD
+              - GET
+            ForwardedValues:
+              QueryString: true
+              Headers:
+                - original-uri
+                - User-Agent
+                - X-Forwarded-For
+            TargetOriginId: "${self:service}-${opt:stage}-api-gateway"
+            ViewerProtocolPolicy: redirect-to-https
+
+          Origins:
+          - CustomOriginConfig:
+              HTTPSPort: 443
+              OriginProtocolPolicy: https-only
+            DomainName:
+              "Fn::Join": ["", [{"Ref": "ApiGatewayRestApi"}, ".execute-api.${self:provider.region}.amazonaws.com"]]
+            Id: "${self:service}-${opt:stage}-api-gateway"
+            OriginPath: /${opt:stage}/${self:service}
