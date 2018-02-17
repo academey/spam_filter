@@ -15,7 +15,7 @@ const initialSpamFilterState: ISpamFilterState = {
   isLoading: false,
   hasError: false,
   content: "",
-  spamLinkDomains: List(),
+  spamLinkDomains: List([""]),
   redirectionDepth: 1,
 };
 

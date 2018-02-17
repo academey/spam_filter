@@ -3,10 +3,10 @@ import { IAppState } from "../../reducers";
 import { DispatchProp } from "react-redux";
 import { ISpamFilterStateRecord } from "./records";
 import { connect } from "react-redux";
-import { Helmet } from "react-helmet";
 import { InputBox } from "../common/inputBox/index";
 
 import * as Actions from "./actions";
+import { List } from "immutable";
 
 const styles = require("./spamFilter.scss");
 
@@ -31,6 +31,24 @@ class SpamFilterContainer extends React.Component<ISpamFilterContainerProps, {}>
     dispatch(Actions.changeContentInput(content));
   };
 
+  private changeSpamLinkDomain = (spamLinkDomain: string, index: number) => {
+    const { dispatch } = this.props;
+
+    dispatch(Actions.changeSpamLinkDomain(spamLinkDomain, index));
+  };
+
+  private plusSpamLinkDomain = () => {
+    const { dispatch } = this.props;
+
+    dispatch(Actions.plusSpamLinkDomain());
+  };
+
+  private minusSpamLinkDomain = () => {
+    const { dispatch } = this.props;
+
+    dispatch(Actions.minusSpamLinkDomain());
+  };
+
   private plusRedirectionDepth = () => {
     const { dispatch } = this.props;
 
@@ -43,20 +61,42 @@ class SpamFilterContainer extends React.Component<ISpamFilterContainerProps, {}>
     dispatch(Actions.minusRedirectionDepth());
   };
 
+  private mapSpamLinkDomains = (spamLinkDomains: List<string>) => {
+    const spamLinkDomainItems = spamLinkDomains.map((spamLinkDomain: string, index: number) => {
+      const isNotOnlyDomainItem = spamLinkDomains.size > 1;
+      const isLastDomainItem = index === spamLinkDomains.size - 1;
+
+      return (
+        <div key={`spam_link_domain_${index}`}>
+          <InputBox
+            onChangeFunc={(value: string) => {
+              this.changeSpamLinkDomain(value, index);
+            }}
+            type="normal"
+            defaultValue={spamLinkDomain}
+          />
+          {isLastDomainItem ? <span onClick={this.plusSpamLinkDomain}>+</span> : null}
+          {isLastDomainItem && isNotOnlyDomainItem ? <span onClick={this.minusSpamLinkDomain}>-</span> : null}
+        </div>
+      );
+    });
+
+    return spamLinkDomainItems;
+  };
+
   public render() {
-    const { content, redirectionDepth } = this.props.spamFilterState;
+    const { content, spamLinkDomains, redirectionDepth } = this.props.spamFilterState;
     return (
       <div className={styles.spamFilterContainer}>
-        <Helmet title={"test"} />
         <form className={styles.formContainer}>
           <div>Content</div>
           <InputBox onChangeFunc={this.changeContent} type="normal" defaultValue={content} />
           <div>Spam Link Domains</div>
-          <InputBox onChangeFunc={() => {}} type="normal" defaultValue={content} />
+          {this.mapSpamLinkDomains(spamLinkDomains)}
           <div>redirectionDepth</div>
           <div>{redirectionDepth}</div>
-          <div onClick={this.plusRedirectionDepth}>+</div>
-          <div onClick={this.minusRedirectionDepth}>-</div>
+          <span onClick={this.plusRedirectionDepth}>+</span>
+          <span onClick={this.minusRedirectionDepth}>-</span>
         </form>
         Home
       </div>

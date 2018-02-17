@@ -8,6 +8,24 @@ export function reducer(state = SPAM_FILTER_INITIAL_STATE, action: IReduxAction<
       return state.set("content", action.payload.content);
     }
 
+    case ACTION_TYPES.SPAM_FILTER_CHANGE_SPAM_LINK_DOMAIN: {
+      return state.withMutations(currentState => {
+        return currentState.setIn(["spamLinkDomains", action.payload.index], action.payload.spamLinkDomain);
+      });
+    }
+
+    case ACTION_TYPES.SPAM_FILTER_PLUS_SPAM_LINK_DOMAIN: {
+      const pushedSpamLinkDomains = state.spamLinkDomains.push("");
+
+      return state.set("spamLinkDomains", pushedSpamLinkDomains);
+    }
+
+    case ACTION_TYPES.SPAM_FILTER_MINUS_SPAM_LINK_DOMAIN: {
+      const poppedSpamLinkDomains = state.spamLinkDomains.pop();
+
+      return state.set("spamLinkDomains", poppedSpamLinkDomains);
+    }
+
     case ACTION_TYPES.SPAM_FILTER_PLUS_REDIRECTION_DEPTH: {
       const currentRedirectionDepth = state.redirectionDepth;
 
