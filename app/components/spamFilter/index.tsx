@@ -26,6 +26,40 @@ function mapStateToProps(state: IAppState) {
 }
 
 class SpamFilterContainer extends React.Component<ISpamFilterContainerProps, {}> {
+  public render() {
+    const { content, spamLinkDomains, redirectionDepth } = this.props.spamFilterState;
+    this.testSpamFilter();
+    return (
+      <div className={styles.spamFilterContainer}>
+        <form
+          onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
+            e.preventDefault();
+            this.spamFilterCheck();
+          }}
+          className={styles.formContainer}
+        >
+          <div className={styles.title}>Content</div>
+          <InputBox onChangeFunc={this.changeContent} type="normal" defaultValue={content} />
+          <div className={styles.title}>Spam Link Domains</div>
+          {this.mapSpamLinkDomains(spamLinkDomains)}
+          <div className={styles.title}>redirectionDepth</div>
+          <div className={styles.redirectionDepthCount}>
+            {redirectionDepth}
+            <span className={styles.plusButton} onClick={this.plusRedirectionDepth}>
+              +
+            </span>
+            <span className={styles.minusButton} onClick={this.minusRedirectionDepth}>
+              -
+            </span>
+          </div>
+          <button type="submit" className={styles.submitButton}>
+            CHECK!!
+          </button>
+        </form>
+      </div>
+    );
+  }
+
   private changeContent = (content: string) => {
     const { dispatch } = this.props;
 
@@ -104,39 +138,11 @@ class SpamFilterContainer extends React.Component<ISpamFilterContainerProps, {}>
     return axiosCancelTokenManager.getCancelTokenSource();
   };
 
-  public render() {
-    const { content, spamLinkDomains, redirectionDepth } = this.props.spamFilterState;
-    Actions.testSpamFilter();
-    return (
-      <div className={styles.spamFilterContainer}>
-        <form
-          onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
-            e.preventDefault();
-            this.spamFilterCheck();
-          }}
-          className={styles.formContainer}
-        >
-          <div className={styles.title}>Content</div>
-          <InputBox onChangeFunc={this.changeContent} type="normal" defaultValue={content} />
-          <div className={styles.title}>Spam Link Domains</div>
-          {this.mapSpamLinkDomains(spamLinkDomains)}
-          <div className={styles.title}>redirectionDepth</div>
-          <div className={styles.redirectionDepthCount}>
-            {redirectionDepth}
-            <span className={styles.plusButton} onClick={this.plusRedirectionDepth}>
-              +
-            </span>
-            <span className={styles.minusButton} onClick={this.minusRedirectionDepth}>
-              -
-            </span>
-          </div>
-          <button type="submit" className={styles.submitButton}>
-            CHECK!!
-          </button>
-        </form>
-      </div>
-    );
-  }
+  private testSpamFilter = async () => {
+    console.log("start");
+    await Actions.testSpamFilter();
+    console.log("end");
+  };
 }
 
 export default connect(mapStateToProps)(SpamFilterContainer);
