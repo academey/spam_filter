@@ -16,7 +16,7 @@ const initialSpamFilterState: ISpamFilterState = {
   hasError: false,
   content: "",
   spamLinkDomains: List(),
-  redirectionDepth: null,
+  redirectionDepth: 1,
 };
 
 export const SpamFilterStateFactory = makeTypedFactory<ISpamFilterState, ISpamFilterStateRecord>(

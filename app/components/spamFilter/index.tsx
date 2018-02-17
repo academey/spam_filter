@@ -31,6 +31,18 @@ class SpamFilterContainer extends React.Component<ISpamFilterContainerProps, {}>
     dispatch(Actions.changeContentInput(content));
   };
 
+  private plusRedirectionDepth = () => {
+    const { dispatch } = this.props;
+
+    dispatch(Actions.plusRedirectionDepth());
+  };
+
+  private minusRedirectionDepth = () => {
+    const { dispatch } = this.props;
+
+    dispatch(Actions.minusRedirectionDepth());
+  };
+
   public render() {
     const { content, redirectionDepth } = this.props.spamFilterState;
     return (
@@ -42,7 +54,9 @@ class SpamFilterContainer extends React.Component<ISpamFilterContainerProps, {}>
           <div>Spam Link Domains</div>
           <InputBox onChangeFunc={() => {}} type="normal" defaultValue={content} />
           <div>redirectionDepth</div>
-          <InputBox onChangeFunc={() => {}} type="normal" defaultValue={`${redirectionDepth}`} />
+          <div>{redirectionDepth}</div>
+          <div onClick={this.plusRedirectionDepth}>+</div>
+          <div onClick={this.minusRedirectionDepth}>-</div>
         </form>
         Home
       </div>
