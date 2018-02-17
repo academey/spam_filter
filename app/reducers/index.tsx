@@ -7,25 +7,25 @@ import { SIGN_UP_INITIAL_STATE, ISignUpStateRecord } from "../components/auth/si
 import * as signInReducer from "../components/auth/signIn/reducer";
 import { SIGN_IN_INITIAL_STATE, ISignInStateRecord } from "../components/auth/signIn/records";
 
-import * as homeReducer from "../components/home/reducer";
-import { IHomeStateRecord, HOME_INITIAL_STATE } from "../components/home/records";
+import * as spamFilterReducer from "../components/spamFilter/reducer";
+import { ISpamFilterStateRecord, SPAM_FILTER_INITIAL_STATE } from "../components/spamFilter/records";
 
 export interface IAppState {
   routing?: any;
   signUp: ISignUpStateRecord;
   signIn: ISignInStateRecord;
-  home: IHomeStateRecord;
+  spamFilter: ISpamFilterStateRecord;
 }
 
 export const initialState: IAppState = {
   signUp: SIGN_UP_INITIAL_STATE,
   signIn: SIGN_IN_INITIAL_STATE,
-  home: HOME_INITIAL_STATE,
+  spamFilter: SPAM_FILTER_INITIAL_STATE,
 };
 
 export const rootReducer = Redux.combineReducers<IAppState>({
   routing: routerReducer,
   signUp: signUpReducer.reducer,
   signIn: signInReducer.reducer,
-  home: homeReducer.reducer,
+  spamFilter: spamFilterReducer.reducer,
 });
