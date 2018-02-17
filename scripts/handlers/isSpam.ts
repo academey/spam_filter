@@ -1,5 +1,5 @@
 import * as LambdaProxy from "../interfaces/lambda-proxy";
-const axios = require("axios");
+const curl = require("curl");
 
 export default async function handler(event: LambdaProxy.Event, _context: LambdaProxy.Context) {
   /*
@@ -9,21 +9,28 @@ export default async function handler(event: LambdaProxy.Event, _context: Lambda
       redirectionDepth: number;
   */
 
-  let paramsForGetAccessToken;
+  let paramsForIsSpam;
   try {
-    paramsForGetAccessToken = JSON.parse(event.body);
+    paramsForIsSpam = JSON.parse(event.body);
   } catch (err) {
-    paramsForGetAccessToken = event.body;
+    paramsForIsSpam = event.body;
   }
+  console.log(paramsForIsSpam);
+  // const content = paramsForIsSpam.content;
+  // const spamLinkDomains = paramsForIsSpam.spamLinkDomains;
+  // const redirectionDepth = paramsForIsSpam.redirectionDepth;
 
-  axios({
-    method: "post",
-    url: "https://api.coinone.co.kr/oauth/access_token",
-    data: {
-      app_id: paramsForGetAccessToken.appId,
-      app_secret: process.env.COINONE_APP_SECRET_CODE,
-      request_token: paramsForGetAccessToken.requestToken
-    }
+  const testUrl = "https://goo.gl/nVLutc";
+  new Promise((resolve, _reject) => {
+    curl.get(testUrl, {}, function(err: any, response: any, body: any) {
+      // if(err){
+      //   _reject();
+      // }
+      console.log(err);
+      console.log(response);
+      console.log(body);
+      resolve();
+    });
   })
     .then((response: any) => {
       console.log("success response is ", response);

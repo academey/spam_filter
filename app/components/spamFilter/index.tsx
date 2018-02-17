@@ -102,7 +102,7 @@ class SpamFilterContainer extends React.Component<ISpamFilterContainerProps, {}>
       const isLastDomainItem = index === spamLinkDomains.size - 1;
 
       return (
-        <div key={`spam_link_domain_${index}`}>
+        <div className={styles.spamLinkDomain} key={`spam_link_domain_${index}`}>
           <InputBox
             onChangeFunc={(value: string) => {
               this.changeSpamLinkDomain(value, index);
@@ -110,8 +110,16 @@ class SpamFilterContainer extends React.Component<ISpamFilterContainerProps, {}>
             type="normal"
             defaultValue={spamLinkDomain}
           />
-          {isLastDomainItem ? <span onClick={this.plusSpamLinkDomain}>+</span> : null}
-          {isLastDomainItem && isNotOnlyDomainItem ? <span onClick={this.minusSpamLinkDomain}>-</span> : null}
+          {isLastDomainItem ? (
+            <span className={styles.plusButton} onClick={this.plusSpamLinkDomain}>
+              +
+            </span>
+          ) : null}
+          {isLastDomainItem && isNotOnlyDomainItem ? (
+            <span className={styles.minusButton} onClick={this.minusSpamLinkDomain}>
+              -
+            </span>
+          ) : null}
         </div>
       );
     });

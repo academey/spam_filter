@@ -2,7 +2,7 @@ import { ACTION_TYPES } from "../../actions/actionTypes";
 import { Dispatch } from "react-redux";
 import { ISpamFilterCheckParams } from "../../api/spam";
 import spamApi from "../../api/spam";
-// import axios from "axios";
+import removeDuplicateUsingSet from "../../helpers/removeDuplicateUsingSet";
 
 export function changeContentInput(content: string) {
   return {
@@ -49,31 +49,35 @@ export function minusRedirectionDepth() {
 
 export async function testSpamFilter() {
   return new Promise((resolve, _reject) => {
+    // var http = require('follow-redirects').http;
+    // var followRedirects = require('follow-redirects');
+
+    // var options = url.parse('http://bit.ly/900913');
+    // options.maxRedirects = 10;
+    // http.request(options);
+
+    const urlRegex = require("url-regex");
     const testUrl = "https://goo.gl/nVLutc";
-    // const testContent = `dsfjkfdlsjdfksl sdkljfkdlsjfds ${testUrl} ${testUrl}`;
-    // let urlArray = [];
-    // let currentIndex = 0;
-    // while(currentIndex !== -1) {
-    //   testContent.search("https://")
-    // }
 
-    // testContent.search()
-    // const https = require("https");
-    // https.get(testUrl, (res: any) => {
-    //   console.log(res);
-    // });
-
+    const testContent = `dsfjkfdlsjdfksl sdkljfkdlsjfds ${testUrl} ${testUrl}dsdsds ${testUrl}`;
+    const urlArray = testContent.match(urlRegex());
+    const uniqueUrlArray = removeDuplicateUsingSet(urlArray);
     const request = require("request");
+
+    uniqueUrlArray.forEach((url: string) => {
+      console.log(url);
+    });
+
     request(
       // "https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY",
       {
         url: testUrl,
         followAllRedirects: true,
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Credentials": true,
-        },
-        mode: "no-cors",
+        // headers: {
+        //   "Access-Control-Allow-Origin": "*",
+        //   "Access-Control-Allow-Credentials": true,
+        // },
+        // mode: "no-cors",
       },
       (err: any, _res: any, body: any) => {
         if (err) {
@@ -84,82 +88,9 @@ export async function testSpamFilter() {
         resolve();
       },
     );
-    //   request(
-    //     {
-    //       url: testUrl,
-    //       // mode: "no-cors",
-    //       headers: {
-    //         // { mode: 'no-cors' }
-    //         // mode: "no-cors",
-    //         // "Access-Control-Allow-Origin": "*",
-    //         // "Access-Control-Allow-Credentials": true,
-    //       },
-    //     },
-    //     (error: any, response: any, body: any) => {
-    //       console.log("error:", error); // Print the error if one occurred
-    //       console.log("statusCode:", response && response.statusCode); // Print the response status code if a response was received
-    //       console.log("body:", body); // Print the HTML for the Google homepage.
-    //       resolve();
-    //     },
-    //   );
   }).catch(err => {
     console.error(err);
   });
-
-  // var https = require("follow-redirects").https;
-  // https
-  //   .get("https://goo.gl/nVLutc ", function(response: any) {
-  //     response.on("data", function(chunk: any) {
-  //       console.log(chunk);
-  //     });
-  //   })
-  //   .on("error", function(err: any) {
-  //     console.error(err);
-  //   });
-
-  // axios
-  //   .get(testUrl, {
-  //     // method: "head",
-  //     url: testUrl,
-  //     // withCredentials: true,
-  //     headers: {
-  //       "Access-Control-Allow-Origin": "*",
-  //       "Access-Control-Allow-Methods": "GET, POST, PATCH, PUT, DELETE, OPTIONS, HEAD",
-  //       "Access-Control-Allow-Headers": "Origin, Content-Type, X-Auth-Token",
-  //       "Access-Control-Allow-Credentials": true,
-  //       // "Content-Type": "text/plain;charset=utf-8",
-  //     },
-  //   })
-  //   .then((response: any) => {
-  //     console.log("success response is ", response);
-  //   })
-  //   .catch((err: any) => {
-  //     console.error(err);
-  //   });
-
-  // axios({
-  //   method: "head",
-  //   url: testUrl,
-  //   withCredentials: false,
-  // })
-  //   .then((response: any) => {
-  //     console.log("success response is ", response);
-  //   })
-  //   .catch((err: any) => {
-  //     console.error(err);
-  //   });
-
-  // axios({
-  //   method: "request",
-  //   url: testUrl,
-  //   withCredentials: false,
-  // })
-  //   .then((response: any) => {
-  //     console.log("success response is ", response);
-  //   })
-  //   .catch((err: any) => {
-  //     console.error(err);
-  //   });
 }
 
 export function spamFilterCheck({

@@ -22,8 +22,21 @@
       color: $vingle_black;
     }
 
-    .description {
-      margin-top: 5px;
+    .spamLinkDomain {
+      display: flex;
+      position: relative;
+
+      .plusButton {
+        color: red;
+        position: absolute;
+        right: -30px;
+      }
+
+      .minusButton {
+        color: blue;
+        position: absolute;
+        right: -50px;
+      }
     }
 
     .redirectionDepthCount {
