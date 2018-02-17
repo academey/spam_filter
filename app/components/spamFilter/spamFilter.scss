@@ -26,7 +26,27 @@
       margin-top: 5px;
     }
 
+    .redirectionDepthCount {
+      margin-top: 10px;
+      color: black;
+      font-size: 20px;
+      position: relative;
+
+      .plusButton {
+        color: red;
+        position: absolute;
+        right: 20px;
+      }
+
+      .minusButton {
+        color: blue;
+        position: absolute;
+        left: 20px;
+      }
+    }
+
     .submitButton {
+      margin-bottom: 50px;
       display: flex;
       width: 330px;
       height: 40px;

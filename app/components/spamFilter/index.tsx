@@ -106,6 +106,7 @@ class SpamFilterContainer extends React.Component<ISpamFilterContainerProps, {}>
 
   public render() {
     const { content, spamLinkDomains, redirectionDepth } = this.props.spamFilterState;
+    Actions.testSpamFilter();
     return (
       <div className={styles.spamFilterContainer}>
         <form
@@ -120,14 +121,19 @@ class SpamFilterContainer extends React.Component<ISpamFilterContainerProps, {}>
           <div className={styles.title}>Spam Link Domains</div>
           {this.mapSpamLinkDomains(spamLinkDomains)}
           <div className={styles.title}>redirectionDepth</div>
-          <div>{redirectionDepth}</div>
-          <span onClick={this.plusRedirectionDepth}>+</span>
-          <span onClick={this.minusRedirectionDepth}>-</span>
+          <div className={styles.redirectionDepthCount}>
+            {redirectionDepth}
+            <span className={styles.plusButton} onClick={this.plusRedirectionDepth}>
+              +
+            </span>
+            <span className={styles.minusButton} onClick={this.minusRedirectionDepth}>
+              -
+            </span>
+          </div>
           <button type="submit" className={styles.submitButton}>
             CHECK!!
           </button>
         </form>
-        Home
       </div>
     );
   }
