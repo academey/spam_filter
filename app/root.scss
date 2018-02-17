@@ -1,13 +1,9 @@
-@import url("https://fonts.googleapis.com/css?family=Roboto:300,400,500,700");
-
 :global {
   @import "./helpers/notifier";
 }
 
 * {
-  font-family: "SpoqaHanSans", "Helvetica Neue", "Apple SD Gothic Neo", "SEC", "SamsungKorean", "Noto Sans CJK KR",
-    "Source Han Sans", "본고딕", "Segoe UI", "Roboto", "나눔바른고딕", "나눔고딕", "맑은 고딕", "돋움", "Dotum",
-    sans-serif;
+  font-family: Noto Sans KR, Noto Sans, Helvetica, Arial, Malgun Gothic, sans-serif;
   box-sizing: border-box;
   min-height: 0;
   min-width: 0;

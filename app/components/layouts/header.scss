@@ -1,1 +1,61 @@
+@import "../variables";
 
+.navbar {
+  position: fixed;
+  top: 0;
+  z-index: 100;
+  width: 100%;
+  background-color: #fff;
+  transition: box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  border-bottom: solid $vingle_gray2 1px;
+
+  .isTop {
+    box-shadow: none;
+  }
+
+  .headerContainer {
+    max-width: $container_width;
+    height: $navbar_height;
+    position: relative;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+
+    .leftBox {
+      flex: 1;
+      display: flex;
+      align-items: center;
+
+      .title {
+        color: $vingle_pink;
+        font-size: 20px;
+        font-weight: 500;
+        transition: color 250ms cubic-bezier(0.4, 0, 0.2, 1);
+
+        &:hover {
+          color: $vingle_pink2;
+        }
+      }
+    }
+
+    .linkItem {
+      color: $vingle_pink;
+      font-size: 16px;
+      margin-right: 30px;
+      font-weight: 500;
+      transition: color 250ms cubic-bezier(0.4, 0, 0.2, 1);
+
+      &:hover {
+        color: $vingle_pink2;
+      }
+    }
+
+    .rightBox {
+      font-size: 15px;
+      .link {
+        margin-left: 32px;
+        cursor: pointer;
+      }
+    }
+  }
+}

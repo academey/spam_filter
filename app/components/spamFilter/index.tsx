@@ -89,11 +89,11 @@ class SpamFilterContainer extends React.Component<ISpamFilterContainerProps, {}>
     return (
       <div className={styles.spamFilterContainer}>
         <form className={styles.formContainer}>
-          <div>Content</div>
+          <div className={styles.title}>Content</div>
           <InputBox onChangeFunc={this.changeContent} type="normal" defaultValue={content} />
-          <div>Spam Link Domains</div>
+          <div className={styles.title}>Spam Link Domains</div>
           {this.mapSpamLinkDomains(spamLinkDomains)}
-          <div>redirectionDepth</div>
+          <div className={styles.title}>redirectionDepth</div>
           <div>{redirectionDepth}</div>
           <span onClick={this.plusRedirectionDepth}>+</span>
           <span onClick={this.minusRedirectionDepth}>-</span>

@@ -1,16 +1,29 @@
 @import "../variables";
 
-.chartContainer {
+.spamFilterContainer {
   padding-top: $navbar-height;
-  max-width: $container_width;
   margin: 0 auto;
+  background-color: $vingle_gray;
 
-  .title {
-    margin-top: 20px;
-    font-weight: 500;
-    font-size: 30px;
-  }
-  .description {
-    margin-top: 5px;
+  .formContainer {
+    margin: 50px auto 0 auto;
+    max-width: $container_width;
+    background-color: #fff;
+    border: 1px solid $vingle_gray3;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .title {
+      margin-top: 20px;
+      font-weight: 500;
+      font-size: 30px;
+      color: $vingle_black;
+    }
+
+    .description {
+      margin-top: 5px;
+    }
   }
 }

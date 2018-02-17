@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Route, Switch } from "react-router-dom";
-import SpamFilterContainer from "./components/spamfilter";
+import SpamFilterContainer from "./components/spamFilter";
 
 import "normalize.css";
 import "./root.scss";
