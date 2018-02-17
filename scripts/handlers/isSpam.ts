@@ -2,11 +2,11 @@ import * as LambdaProxy from "../interfaces/lambda-proxy";
 const axios = require("axios");
 
 export default async function handler(event: LambdaProxy.Event, _context: LambdaProxy.Context) {
-  // https://api.coinone.co.kr/oauth/access_token/?app_id=[App_Id]&app_secret=[App_Secret]&request_token=[Request token]
   /*
       *** body Fields
-      requestToken: string;
-      appId: string;
+      content: string;
+      spamLinkDomains: string[];
+      redirectionDepth: number;
   */
 
   let paramsForGetAccessToken;
@@ -22,8 +22,8 @@ export default async function handler(event: LambdaProxy.Event, _context: Lambda
     data: {
       app_id: paramsForGetAccessToken.appId,
       app_secret: process.env.COINONE_APP_SECRET_CODE,
-      request_token: paramsForGetAccessToken.requestToken,
-    },
+      request_token: paramsForGetAccessToken.requestToken
+    }
   })
     .then((response: any) => {
       console.log("success response is ", response);
@@ -32,9 +32,9 @@ export default async function handler(event: LambdaProxy.Event, _context: Lambda
         headers: {
           "Content-Type": "text/html",
           "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Credentials": true,
+          "Access-Control-Allow-Credentials": true
         },
-        body: response.data.accessToken,
+        body: response.data.accessToken
       };
     })
     .catch((err: any) => {
@@ -44,8 +44,8 @@ export default async function handler(event: LambdaProxy.Event, _context: Lambda
         headers: {
           "Content-Type": "text/html",
           "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Credentials": true,
-        },
+          "Access-Control-Allow-Credentials": true
+        }
       };
     });
 }

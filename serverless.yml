@@ -20,12 +20,12 @@ functions:
       - http:
           method: any
           path: "${self:service}/{proxy+}"
-  getAccessToken:
-    handler: handlers.getAccessToken
+  isSpam:
+    handler: handlers.isSpam
     events:
       - http:
-          method: post
-          path: "getAccessToken"
+          method: get
+          path: "isSpam"
           cors: true
 
 resources:

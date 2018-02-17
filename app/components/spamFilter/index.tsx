@@ -7,6 +7,7 @@ import { InputBox } from "../common/inputBox/index";
 
 import * as Actions from "./actions";
 import { List } from "immutable";
+import AxiosCancelTokenManager from "../../helpers/axiosCancelTokenManager";
 
 const styles = require("./spamFilter.scss");
 
@@ -84,11 +85,36 @@ class SpamFilterContainer extends React.Component<ISpamFilterContainerProps, {}>
     return spamLinkDomainItems;
   };
 
+  private spamFilterCheck = () => {
+    const { dispatch } = this.props;
+    const { content, spamLinkDomains, redirectionDepth } = this.props.spamFilterState;
+
+    dispatch(
+      Actions.spamFilterCheck({
+        content,
+        spamLinkDomains,
+        redirectionDepth,
+        cancelTokenSource: this.getAxiosCancelToken(),
+      }),
+    );
+  };
+
+  private getAxiosCancelToken = () => {
+    const axiosCancelTokenManager = new AxiosCancelTokenManager();
+    return axiosCancelTokenManager.getCancelTokenSource();
+  };
+
   public render() {
     const { content, spamLinkDomains, redirectionDepth } = this.props.spamFilterState;
     return (
       <div className={styles.spamFilterContainer}>
-        <form className={styles.formContainer}>
+        <form
+          onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
+            e.preventDefault();
+            this.spamFilterCheck();
+          }}
+          className={styles.formContainer}
+        >
           <div className={styles.title}>Content</div>
           <InputBox onChangeFunc={this.changeContent} type="normal" defaultValue={content} />
           <div className={styles.title}>Spam Link Domains</div>
@@ -97,6 +123,9 @@ class SpamFilterContainer extends React.Component<ISpamFilterContainerProps, {}>
           <div>{redirectionDepth}</div>
           <span onClick={this.plusRedirectionDepth}>+</span>
           <span onClick={this.minusRedirectionDepth}>-</span>
+          <button type="submit" className={styles.submitButton}>
+            CHECK!!
+          </button>
         </form>
         Home
       </div>
