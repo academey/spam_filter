@@ -71,25 +71,25 @@ export async function testSpamFilter() {
     request(
       // "https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY",
       {
+        method: "get",
         url: testUrl,
+        withCredentials: true,
         followAllRedirects: true,
-        // headers: {
-        //   "Access-Control-Allow-Origin": "*",
-        //   "Access-Control-Allow-Credentials": true,
-        // },
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Credentials": true,
+        },
         // mode: "no-cors",
       },
       (err: any, _res: any, body: any) => {
         if (err) {
-          return console.log(err);
+          console.log(err);
         }
         console.log(body.url);
         console.log(body.explanation);
         resolve();
       },
     );
-  }).catch(err => {
-    console.error(err);
   });
 }
 

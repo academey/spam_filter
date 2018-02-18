@@ -29,7 +29,16 @@ export default async function handler(event: LambdaProxy.Event, _context: Lambda
       console.log(err);
       console.log(response);
       console.log(body);
-      resolve();
+      var exec = require("child_process").exec;
+
+      exec("pwd", function(error: any, stdout: any, stderr: any) {
+        console.log("stdout: " + stdout);
+        console.log("stderr: " + stderr);
+        if (error !== null) {
+          console.log("exec error: " + error);
+        }
+        resolve();
+      });
     });
   })
     .then((response: any) => {

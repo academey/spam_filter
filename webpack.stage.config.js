@@ -61,10 +61,16 @@ module.exports = {
           { loader: "sass-loader" },
         ],
       },
+      {
+        test: /\.json$/,
+        use: ["json-loader"],
+      },
     ],
   },
   node: {
     fs: "empty",
+    net: "empty",
+    tls: "empty",
   },
   externals: {
     "react/lib/ExecutionEnvironment": true,
