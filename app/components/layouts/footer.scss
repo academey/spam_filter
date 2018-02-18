@@ -1,1 +1,45 @@
+@import "../variables";
 
+.footerContainer {
+  position: relative;
+  max-width: $container_width;
+  margin: 20px auto 21px auto;
+  display: flex;
+  align-items: center;
+  font-size: 13px;
+  line-height: 1.85;
+  padding: 20px;
+  color: $black_navy1;
+
+  .leftBox {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+
+    .footerLogo {
+      display: inline-block;
+      margin-right: 40px;
+      svg {
+        width: 200px;
+        height: 54px;
+        object-fit: contain;
+      }
+    }
+    .bold {
+      font-weight: bold;
+      display: inline;
+    }
+    .copyright {
+      margin-top: 5px;
+      font-weight: 300;
+    }
+  }
+
+  .rightBox {
+    font-size: 15px;
+    .link {
+      margin-left: 32px;
+      cursor: pointer;
+    }
+  }
+}

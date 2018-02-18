@@ -3,7 +3,7 @@
 .spamFilterContainer {
   padding-top: $navbar-height;
   margin: 0 auto;
-  padding-bottom: 50px;
+  padding-bottom: 2px;
   background-color: $vingle_gray;
 
   .formContainer {
@@ -23,6 +23,10 @@
       color: $vingle_black;
     }
 
+    .inputBox {
+      margin-top: 10px;
+    }
+
     .spamLinkDomain {
       display: flex;
       position: relative;
@@ -30,13 +34,17 @@
       .plusButton {
         color: red;
         position: absolute;
+        top: 18px;
         right: -30px;
+        cursor: pointer;
       }
 
       .minusButton {
         color: blue;
         position: absolute;
+        top: 18px;
         right: -50px;
+        cursor: pointer;
       }
     }
 
@@ -50,12 +58,14 @@
         color: red;
         position: absolute;
         left: 20px;
+        cursor: pointer;
       }
 
       .minusButton {
         color: blue;
         position: absolute;
         right: 20px;
+        cursor: pointer;
       }
     }
 
@@ -76,6 +86,28 @@
       align-items: center;
       cursor: pointer;
       transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1), color 250ms cubic-bezier(0.4, 0, 0.2, 1);
+
+      &.isLoading {
+        position: relative;
+        cursor: not-allowed;
+        background-color: $vingle_black;
+        color: $vingle_gray;
+
+        .spinner {
+          position: absolute;
+          left: 30px;
+        }
+      }
+
+      &.isSpam {
+        background-color: $vingle_pink;
+        color: $vingle_gray;
+      }
+
+      &.isNotSpam {
+        background-color: $light_green;
+        color: $vingle_gray;
+      }
     }
   }
 }

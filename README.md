@@ -5,6 +5,21 @@ If that url is redirected, api will track that redirecting.
 
 **_The [Demo](https://de3aauy1s6nnp.cloudfront.net) is now available!_**
 
+**isSpam API URL**
+
+* POST with JSON Body
+* https://bgy46h4uge.execute-api.us-east-1.amazonaws.com/prod/isSpam
+
+**isSpam API PARAMS**
+
+* content: string;
+* spamLinkDomains: string[];
+* redirectionDepth: number;
+
+**isSpam Return Value**
+
+* isSpam: boolean;
+
 # Project spec
 
 * **TypeScript** - Basic language

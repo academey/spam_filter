@@ -8,6 +8,7 @@ import { InputBox } from "../common/inputBox/index";
 import * as Actions from "./actions";
 import { List } from "immutable";
 import AxiosCancelTokenManager from "../../helpers/axiosCancelTokenManager";
+import Spinner from "../common/spinner/index";
 
 const styles = require("./spamFilter.scss");
 
@@ -38,7 +39,12 @@ class SpamFilterContainer extends React.Component<ISpamFilterContainerProps, {}>
           className={styles.formContainer}
         >
           <div className={styles.title}>Content</div>
-          <InputBox onChangeFunc={this.changeContent} type="normal" defaultValue={content} />
+          <InputBox
+            onChangeFunc={this.changeContent}
+            type="normal"
+            className={styles.inputBox}
+            defaultValue={content}
+          />
           <div className={styles.title}>Spam Link Domains</div>
           {this.mapSpamLinkDomains(spamLinkDomains)}
           <div className={styles.title}>redirectionDepth</div>
@@ -107,6 +113,7 @@ class SpamFilterContainer extends React.Component<ISpamFilterContainerProps, {}>
             onChangeFunc={(value: string) => {
               this.changeSpamLinkDomain(value, index);
             }}
+            className={styles.inputBox}
             type="normal"
             defaultValue={spamLinkDomain}
           />
@@ -151,19 +158,16 @@ class SpamFilterContainer extends React.Component<ISpamFilterContainerProps, {}>
 
     if (isLoading) {
       return (
-        <button type="submit" className={styles.submitButton}>
+        <button disabled={isLoading} type="submit" className={`${styles.submitButton} ${styles.isLoading}`}>
+          <Spinner className={styles.spinner} />
           Loading....
         </button>
       );
     } else if (isSpam === true) {
-      return (
-        <button type="submit" className={styles.submitButton}>
-          SPAM
-        </button>
-      );
+      return <button className={`${styles.submitButton} ${styles.isSpam}`}>SPAM</button>;
     } else if (isSpam === false) {
       return (
-        <button type="submit" className={styles.submitButton}>
+        <button type="submit" className={`${styles.submitButton} ${styles.isNotSpam}`}>
           NOT SPAM
         </button>
       );
