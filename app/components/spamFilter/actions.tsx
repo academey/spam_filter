@@ -81,14 +81,7 @@ function getHttpContent(_url: string): Promise<string> {
 }
 
 export async function testSpamFilter() {
-  return new Promise((resolve, _reject) => {
-    // var http = require('follow-redirects').http;
-    // var followRedirects = require('follow-redirects');
-
-    // var options = url.parse('http://bit.ly/900913');
-    // options.maxRedirects = 10;
-    // http.request(options);
-
+  return new Promise(async (resolve, _reject) => {
     const urlRegex = require("url-regex");
     const testUrl = "https://goo.gl/nVLutc";
     const testContent = `dsfjkfdlsjdfksl sdkljfkdlsjfds ${testUrl} ${testUrl}dsdsds ${testUrl}`;
@@ -97,52 +90,34 @@ export async function testSpamFilter() {
     const spamLinkDomains = ["tvtv24.com", "www.filekok.com"];
     const redirectionDepth = 4;
 
-    let hasSpam: boolean;
-    uniqueUrlArray.forEach(async (url: string) => {
-      let currentDepth = 0;
-      let isRedirect;
+    let anySpamLinkHasSpam: boolean;
+    await Promise.all(
+      uniqueUrlArray.map(async (url: string) => {
+        let currentDepth = 0;
+        let isRedirect;
 
-      do {
-        const httpCode = await getHttpCode(url);
-        const httpContent = await getHttpContent(url);
-        const httpContentHasLinkTag = hasLinkTagCheck(httpContent);
-        if (httpCode === 301 || httpCode === 302 || httpContentHasLinkTag) {
-          isRedirect = true;
-        } else {
-          hasSpam = await hasSpamCheck(httpContent, spamLinkDomains);
-          if (hasSpam) break;
+        let thisUrlHasSpam;
+        do {
+          const httpCode = await getHttpCode(url);
+          const httpContent = await getHttpContent(url);
+          const httpContentHasLinkTag = hasLinkTagCheck(httpContent);
+          if (httpCode === 301 || httpCode === 302 || httpContentHasLinkTag) {
+            isRedirect = true;
+          } else {
+            thisUrlHasSpam = await hasSpamCheck(httpContent, spamLinkDomains);
+            if (thisUrlHasSpam) break;
+          }
+          isRedirect = false;
+          currentDepth++;
+        } while (currentDepth <= redirectionDepth && isRedirect);
+        if (thisUrlHasSpam) {
+          anySpamLinkHasSpam = true;
+          return;
         }
-        isRedirect = false;
-        currentDepth++;
-      } while (currentDepth <= redirectionDepth && isRedirect);
-
-      if (hasSpam) return;
-    });
-
-    const request = require("request");
-
-    request(
-      // "https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY",
-      {
-        method: "get",
-        url: testUrl,
-        withCredentials: true,
-        followAllRedirects: true,
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Credentials": true,
-        },
-        // mode: "no-cors",
-      },
-      (err: any, _res: any, body: any) => {
-        if (err) {
-          console.log(err);
-        }
-        console.log(body.url);
-        console.log(body.explanation);
-        resolve();
-      },
+      }),
     );
+    console.log("anySpamLinkHasSpam is ", anySpamLinkHasSpam);
+    resolve();
   });
 }
 
@@ -153,6 +128,31 @@ export function spamFilterCheck({
   cancelTokenSource,
 }: ISpamFilterCheckParams) {
   return async (dispatch: Dispatch<any>) => {
+    let isContentTooShort = false;
+    if (content.length < 2) {
+      isContentTooShort = true;
+      alert("isContentTooShort");
+    }
+
+    let isSpamLinkDomainTooShort = false;
+    spamLinkDomains.forEach((spamLinkDomain: string) => {
+      if (spamLinkDomain.length < 2) {
+        isSpamLinkDomainTooShort = true;
+        alert("isSpamLinkDomainTooShort");
+        return;
+      }
+    });
+
+    let isRedirectionDepthTooSmall = false;
+    if (redirectionDepth < 1) {
+      isRedirectionDepthTooSmall = true;
+      alert("isRedirectionDepthTooSmall");
+    }
+
+    if (isContentTooShort || isSpamLinkDomainTooShort || isRedirectionDepthTooSmall) {
+      return;
+    }
+
     dispatch({
       type: ACTION_TYPES.SPAM_FILTER_START_TO_SPAM_FILTER_CHECK,
     });

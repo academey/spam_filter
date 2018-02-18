@@ -45,11 +45,11 @@ class SpamFilterContainer extends React.Component<ISpamFilterContainerProps, {}>
           <div className={styles.title}>redirectionDepth</div>
           <div className={styles.redirectionDepthCount}>
             {redirectionDepth}
-            <span className={styles.plusButton} onClick={this.plusRedirectionDepth}>
-              +
-            </span>
             <span className={styles.minusButton} onClick={this.minusRedirectionDepth}>
               -
+            </span>
+            <span className={styles.plusButton} onClick={this.plusRedirectionDepth}>
+              +
             </span>
           </div>
           <button type="submit" className={styles.submitButton}>
@@ -91,9 +91,12 @@ class SpamFilterContainer extends React.Component<ISpamFilterContainerProps, {}>
   };
 
   private minusRedirectionDepth = () => {
-    const { dispatch } = this.props;
-
-    dispatch(Actions.minusRedirectionDepth());
+    const { dispatch, spamFilterState } = this.props;
+    if (spamFilterState.redirectionDepth <= 0) {
+      alert("redirectionDepth can not be under 0 ");
+    } else {
+      dispatch(Actions.minusRedirectionDepth());
+    }
   };
 
   private mapSpamLinkDomains = (spamLinkDomains: List<string>) => {

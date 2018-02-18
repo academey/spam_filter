@@ -3,6 +3,7 @@
 .spamFilterContainer {
   padding-top: $navbar-height;
   margin: 0 auto;
+  padding-bottom: 50px;
   background-color: $vingle_gray;
 
   .formContainer {
@@ -48,17 +49,18 @@
       .plusButton {
         color: red;
         position: absolute;
-        right: 20px;
+        left: 20px;
       }
 
       .minusButton {
         color: blue;
         position: absolute;
-        left: 20px;
+        right: 20px;
       }
     }
 
     .submitButton {
+      margin-top: 20px;
       margin-bottom: 50px;
       display: flex;
       width: 330px;

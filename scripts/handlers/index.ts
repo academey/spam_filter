@@ -6,7 +6,7 @@ import isSpam from "./isSpam";
 
 const handlers = {
   render: HandlerWrapper.safelyWrap(render),
-  isSpam: isSpam,
+  isSpam: HandlerWrapper.safelyWrap(isSpam),
 };
 
 module.exports = handlers;
