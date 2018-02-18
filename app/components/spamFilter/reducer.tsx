@@ -38,6 +38,26 @@ export function reducer(state = SPAM_FILTER_INITIAL_STATE, action: IReduxAction<
       return state.set("redirectionDepth", currentRedirectionDepth - 1);
     }
 
+    case ACTION_TYPES.SPAM_FILTER_START_TO_SPAM_FILTER_CHECK: {
+      return state.withMutations(currentState => {
+        return currentState.set("isLoading", true).set("hasError", false);
+      });
+    }
+
+    case ACTION_TYPES.SPAM_FILTER_SUCCEEDED_TO_SPAM_FILTER_CHECK: {
+      return state.withMutations(currentState => {
+        return currentState
+          .set("isLoading", false)
+          .set("hasError", false)
+          .set("isSpam", action.payload.isSpam);
+      });
+    }
+
+    case ACTION_TYPES.SPAM_FILTER_FAILED_TO_SPAM_FILTER_CHECK: {
+      return state.withMutations(currentState => {
+        return currentState.set("isLoading", false).set("hasError", true);
+      });
+    }
     default:
       return state;
   }

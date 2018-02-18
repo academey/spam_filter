@@ -16,12 +16,10 @@ class SpamAPI extends SpamFilterAxios {
     redirectionDepth,
     cancelTokenSource,
   }: ISpamFilterCheckParams): Promise<boolean> {
-    const isSpamResponse: AxiosResponse = await this.get("isSpam", {
-      params: {
-        content,
-        spamLinkDomains: spamLinkDomains.toJS(),
-        redirectionDepth,
-      },
+    const isSpamResponse: AxiosResponse = await this.post("isSpam", {
+      content,
+      spamLinkDomains: spamLinkDomains.toJS(),
+      redirectionDepth,
       cancelToken: cancelTokenSource.token,
     });
     const isSpam = isSpamResponse.data;

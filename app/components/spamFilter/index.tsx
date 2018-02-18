@@ -28,7 +28,6 @@ function mapStateToProps(state: IAppState) {
 class SpamFilterContainer extends React.Component<ISpamFilterContainerProps, {}> {
   public render() {
     const { content, spamLinkDomains, redirectionDepth } = this.props.spamFilterState;
-    this.testSpamFilter();
     return (
       <div className={styles.spamFilterContainer}>
         <form
@@ -52,9 +51,7 @@ class SpamFilterContainer extends React.Component<ISpamFilterContainerProps, {}>
               +
             </span>
           </div>
-          <button type="submit" className={styles.submitButton}>
-            CHECK!!
-          </button>
+          {this.getCheckButton()}
         </form>
       </div>
     );
@@ -149,10 +146,34 @@ class SpamFilterContainer extends React.Component<ISpamFilterContainerProps, {}>
     return axiosCancelTokenManager.getCancelTokenSource();
   };
 
-  private testSpamFilter = async () => {
-    console.log("start");
-    await Actions.testSpamFilter();
-    console.log("end");
+  private getCheckButton = () => {
+    const { isLoading, isSpam } = this.props.spamFilterState;
+
+    if (isLoading) {
+      return (
+        <button type="submit" className={styles.submitButton}>
+          Loading....
+        </button>
+      );
+    } else if (isSpam === true) {
+      return (
+        <button type="submit" className={styles.submitButton}>
+          SPAM
+        </button>
+      );
+    } else if (isSpam === false) {
+      return (
+        <button type="submit" className={styles.submitButton}>
+          NOT SPAM
+        </button>
+      );
+    } else {
+      return (
+        <button type="submit" className={styles.submitButton}>
+          CHECK!!
+        </button>
+      );
+    }
   };
 }
 

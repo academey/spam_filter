@@ -18,16 +18,18 @@ function getHttpContent(url: string): Promise<string> {
   });
 }
 
-function hasLinkTagCheck(content: string): boolean {
-  let hasSpam = false;
-  if (content.includes(`href=”link”`)) {
-    hasSpam = true;
+function checkContentHasLinkTag(content: string): boolean {
+  let hasLinkTag = false;
+
+  if (content.search(/<a href/i) !== -1) {
+    //// this should be replaced with more precise regex
+    hasLinkTag = true;
   }
 
-  return hasSpam;
+  return hasLinkTag;
 }
 
-function hasSpamCheck(content: string, spamLinkDomains: string[]): boolean {
+function checkContentHasSpamLinkDomain(content: string, spamLinkDomains: string[]): boolean {
   let hasSpam = false;
   spamLinkDomains.forEach((spamLinkDomain: string) => {
     if (content.includes(spamLinkDomain)) {
@@ -57,44 +59,42 @@ export default async function handler(event: LambdaProxy.Event, _context: Lambda
   } catch (err) {
     paramsForIsSpam = event.body;
   }
-  console.log(paramsForIsSpam);
-  // const content = paramsForIsSpam.content;
-  // const spamLinkDomains = paramsForIsSpam.spamLinkDomains;
-  // const redirectionDepth = paramsForIsSpam.redirectionDepth;
-
-  const testUrl = "https://goo.gl/nVLutc";
-  const testContent = `dsfjkfdlsjdfksl sdkljfkdlsjfds ${testUrl} ${testUrl}dsdsds ${testUrl}`;
-  const urlArray = testContent.match(urlRegex());
-  const uniqueUrlArray = removeDuplicateUsingSet(urlArray);
-  const spamLinkDomains = ["tvtv24.com", "www.filekok.com"];
-  const redirectionDepth = 4;
-  console.log(uniqueUrlArray);
+  const content = paramsForIsSpam.content;
+  const spamLinkDomains = paramsForIsSpam.spamLinkDomains;
+  const redirectionDepth = paramsForIsSpam.redirectionDepth;
 
   try {
+    if (!content || !spamLinkDomains || !redirectionDepth) {
+      throw new Error("Params are not satisfied. You have to put into content, spamLinkDomains, redirectionDepth");
+    }
+
+    const urlArray = content.match(urlRegex());
+    const uniqueUrlArray = removeDuplicateUsingSet(urlArray);
     let anySpamLinkHasSpam: boolean;
     await Promise.all(
       uniqueUrlArray.map(async (url: string) => {
         let currentDepth = 0;
-        let isRedirect;
+        let thisUrlWillRedirect;
 
-        let thisUrlHasSpam;
         do {
+          thisUrlWillRedirect = false;
           const httpCode = await getHttpCode(url);
           const httpContent = await getHttpContent(url);
-          const httpContentHasLinkTag = hasLinkTagCheck(httpContent);
-          if (httpCode === 301 || httpCode === 302 || httpContentHasLinkTag) {
-            isRedirect = true;
-          } else {
-            thisUrlHasSpam = await hasSpamCheck(httpContent, spamLinkDomains);
-            if (thisUrlHasSpam) break;
+          const httpContentHasLinkTag = checkContentHasLinkTag(httpContent);
+          const httpHasError = httpCode.toString()[0] !== "2" && httpCode.toString()[0] !== "3";
+          const httpRedirected = httpCode === 301 || httpCode === 302 || httpContentHasLinkTag;
+          const thisUrlHasSpam = checkContentHasSpamLinkDomain(httpContent, spamLinkDomains);
+
+          if (thisUrlHasSpam) {
+            anySpamLinkHasSpam = true;
+            break;
+          } else if (httpHasError) {
+            return;
+          } else if (httpRedirected) {
+            thisUrlWillRedirect = true;
           }
-          isRedirect = false;
           currentDepth++;
-        } while (currentDepth <= redirectionDepth && isRedirect);
-        if (thisUrlHasSpam) {
-          anySpamLinkHasSpam = true;
-          return;
-        }
+        } while (currentDepth <= redirectionDepth && thisUrlWillRedirect && !anySpamLinkHasSpam);
       }),
     );
 
@@ -104,9 +104,7 @@ export default async function handler(event: LambdaProxy.Event, _context: Lambda
         "Content-Type": "text/html",
         "Access-Control-Allow-Origin": "*",
       },
-      body: {
-        isSpam: anySpamLinkHasSpam,
-      },
+      body: anySpamLinkHasSpam,
     };
   } catch (err) {
     console.log(err);
@@ -116,6 +114,7 @@ export default async function handler(event: LambdaProxy.Event, _context: Lambda
         "Content-Type": "text/html",
         "Access-Control-Allow-Origin": "*",
       },
+      body: err,
     };
   }
 }

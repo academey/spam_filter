@@ -7,6 +7,7 @@ export interface ISpamFilterState {
   content: string;
   spamLinkDomains: List<string>;
   redirectionDepth: number;
+  isSpam: boolean;
 }
 
 export interface ISpamFilterStateRecord extends TypedRecord<ISpamFilterStateRecord>, ISpamFilterState {}
@@ -17,6 +18,7 @@ const initialSpamFilterState: ISpamFilterState = {
   content: "",
   spamLinkDomains: List([""]),
   redirectionDepth: 1,
+  isSpam: null,
 };
 
 export const SpamFilterStateFactory = makeTypedFactory<ISpamFilterState, ISpamFilterStateRecord>(
