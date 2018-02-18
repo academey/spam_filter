@@ -47,6 +47,39 @@ export function minusRedirectionDepth() {
   };
 }
 
+function hasLinkTagCheck(content: string): boolean {
+  let hasSpam = false;
+  if (content.includes(`href=”link”`)) {
+    hasSpam = true;
+  }
+
+  return hasSpam;
+}
+
+function hasSpamCheck(content: string, spamLinkDomains: string[]): boolean {
+  let hasSpam = false;
+  spamLinkDomains.forEach((spamLinkDomain: string) => {
+    if (content.includes(spamLinkDomain)) {
+      hasSpam = true;
+      return hasSpam;
+    }
+  });
+
+  return hasSpam;
+}
+
+function getHttpCode(_url: string): Promise<number> {
+  return new Promise(resolve => {
+    resolve(301);
+  });
+}
+
+function getHttpContent(_url: string): Promise<string> {
+  return new Promise(resolve => {
+    resolve("fsdkfjdskljfdslkfd");
+  });
+}
+
 export async function testSpamFilter() {
   return new Promise((resolve, _reject) => {
     // var http = require('follow-redirects').http;
@@ -58,15 +91,35 @@ export async function testSpamFilter() {
 
     const urlRegex = require("url-regex");
     const testUrl = "https://goo.gl/nVLutc";
-
     const testContent = `dsfjkfdlsjdfksl sdkljfkdlsjfds ${testUrl} ${testUrl}dsdsds ${testUrl}`;
     const urlArray = testContent.match(urlRegex());
     const uniqueUrlArray = removeDuplicateUsingSet(urlArray);
-    const request = require("request");
+    const spamLinkDomains = ["tvtv24.com", "www.filekok.com"];
+    const redirectionDepth = 4;
 
-    uniqueUrlArray.forEach((url: string) => {
-      console.log(url);
+    let hasSpam: boolean;
+    uniqueUrlArray.forEach(async (url: string) => {
+      let currentDepth = 0;
+      let isRedirect;
+
+      do {
+        const httpCode = await getHttpCode(url);
+        const httpContent = await getHttpContent(url);
+        const httpContentHasLinkTag = hasLinkTagCheck(httpContent);
+        if (httpCode === 301 || httpCode === 302 || httpContentHasLinkTag) {
+          isRedirect = true;
+        } else {
+          hasSpam = await hasSpamCheck(httpContent, spamLinkDomains);
+          if (hasSpam) break;
+        }
+        isRedirect = false;
+        currentDepth++;
+      } while (currentDepth <= redirectionDepth && isRedirect);
+
+      if (hasSpam) return;
     });
+
+    const request = require("request");
 
     request(
       // "https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY",

@@ -24,7 +24,7 @@ functions:
     handler: handlers.isSpam
     events:
       - http:
-          method: get
+          method: post
           path: "isSpam"
           cors: true
 
